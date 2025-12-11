@@ -7,11 +7,7 @@ import { CONFIG } from 'src/shared/constants/env';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: CONFIG.DATABASE_HOST,
-      port: CONFIG.DATABASE_PORT,
-      username: CONFIG.DATABASE_USER,
-      password: CONFIG.DATABASE_PASSWORD,
-      database: CONFIG.DATABASE_NAME,
+      url: CONFIG.DATABASE_URL,
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: ['error'],
