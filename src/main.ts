@@ -1,6 +1,7 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { CorsConfig } from './config/cors/cors.config';
 import { SwaggerConfig } from './config/swagger/swagger.config';
 import { CONFIG } from './shared/constants/env';
 
@@ -18,6 +19,7 @@ async function bootstrap() {
   );
 
   SwaggerConfig.setup(app);
+  CorsConfig.setup(app);
   await app.listen(port, () => {
     logger.log(`Server is running in ${CONFIG.NODE_ENV.toUpperCase()} mode`);
     logger.log(`Server is running on port ${port}`);

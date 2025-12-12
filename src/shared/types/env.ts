@@ -5,4 +5,5 @@ export type EnvironmentVariables = {
   POKEAPI_BASE_URL: string;
   GEMINI_API_KEY: string;
   GEMINI_MODEL: string;
+  FRONTEND_URL: string;
 };
