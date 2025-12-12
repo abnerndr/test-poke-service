@@ -5,7 +5,9 @@ export class PokemonEvolutionDTO {
   @ApiProperty({ description: 'The ID of the Pokémon in this evolution stage' })
   id: number;
 
-  @ApiProperty({ description: 'The name of the Pokémon in this evolution stage' })
+  @ApiProperty({
+    description: 'The name of the Pokémon in this evolution stage',
+  })
   name: string;
 
   @ApiProperty({
@@ -37,4 +39,3 @@ export class PokemonEvolutionsDTO {
   })
   third?: PokemonEvolutionDTO;
 }
-

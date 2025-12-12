@@ -2,6 +2,7 @@ export * from './ability.dto';
 export * from './evolution-chain.dto';
 export * from './named-api-resource.dto';
 export * from './pokemon-ability.dto';
+export * from './pokemon-color.dto';
 export * from './pokemon-list.dto';
 export * from './pokemon-species.dto';
 export * from './pokemon-sprites.dto';

@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { PokeAPIPokemonColorDTO } from 'src/external/pokeapi/dto';
 import { PokeAPIService } from 'src/external/pokeapi/pokeapi.service';
 import {
   GetPokemonQueryDTO,
   GetPokemonsQueryDTO,
   PokemonDTO,
+  PokemonEvolutionsDTO,
   PokemonListItemDTO,
   PokemonsDTO,
 } from './dto';
 import { PokemonMapper } from './mapper/pokemon.mapper';
-import { SvgUtils } from './utils/svg';
+import { EvolutionUtils } from './mapper/utils/evolution';
+import { SvgUtils } from './mapper/utils/svg';
 
 @Injectable()
 export class PokemonService {
@@ -19,13 +22,14 @@ export class PokemonService {
       query.name_or_id,
     );
 
-    // Buscar cadeia de evolução
-    let evolutions;
+    let evolutions: PokemonEvolutionsDTO | undefined;
+    let color: PokeAPIPokemonColorDTO | undefined;
     try {
       const species = await this.pokeAPIService.getPokemonSpeciesByNameOrId(
         pokemon.species.url.split('/').filter(Boolean).pop() ?? '',
       );
 
+      // Buscar cadeia de evolução
       if (species.evolution_chain?.url) {
         const evolutionChainId = species.evolution_chain.url
           .split('/')
@@ -38,18 +42,37 @@ export class PokemonService {
               Number(evolutionChainId),
             );
 
-          evolutions = await PokemonMapper.mapEvolutions(
+          evolutions = await new EvolutionUtils().mapEvolutions(
             evolutionChain,
             this.pokeAPIService,
           );
         }
       }
+      if (species.color?.url) {
+        const colorIdOrName = species.color.url
+          .split('/')
+          .filter(Boolean)
+          .pop();
+
+        if (colorIdOrName) {
+          try {
+            color =
+              await this.pokeAPIService.getPokemonColorByNameOrId(
+                colorIdOrName,
+              );
+          } catch {
+            // Se não conseguir buscar cor, continua sem ela
+            color = undefined;
+          }
+        }
+      }
     } catch {
-      // Se não conseguir buscar evoluções, continua sem elas
+      // Se não conseguir buscar espécie, continua sem evoluções e cor
       evolutions = undefined;
+      color = undefined;
     }
 
-    return PokemonMapper.toDTO(pokemon, evolutions);
+    return PokemonMapper.toDTO(pokemon, evolutions, color);
   }
 
   async listPokemons(query: GetPokemonsQueryDTO): Promise<PokemonsDTO> {

@@ -4,6 +4,7 @@ import {
   PokeAPIPokemonStatDTO,
 } from 'src/external/pokeapi/dto';
 import { PokemonAbilityDTO } from './pokemon-ability.dto';
+import { PokemonColorDTO } from './pokemon-color.dto';
 import { PokemonEvolutionsDTO } from './pokemon-evolution.dto';
 import { PokemonPictureDTO } from './pokemon-picture.dto';
 
@@ -71,4 +72,11 @@ export class PokemonDTO {
     required: false,
   })
   evolutions?: PokemonEvolutionsDTO;
+
+  @ApiProperty({
+    description: 'The color(s) of this Pokémon',
+    type: PokemonColorDTO,
+    required: false,
+  })
+  color?: PokemonColorDTO;
 }

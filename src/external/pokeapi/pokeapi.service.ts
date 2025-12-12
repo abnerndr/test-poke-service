@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { CONFIG } from 'src/shared/constants/env';
 import { PokeAPIAbilityDTO } from './dto/ability.dto';
 import { PokeAPIEvolutionChainDTO } from './dto/evolution-chain.dto';
+import { PokeAPIPokemonColorDTO } from './dto/pokemon-color.dto';
 import { PokeAPIPokemonListDTO } from './dto/pokemon-list.dto';
 import { PokeAPIPokemonSpeciesDTO } from './dto/pokemon-species.dto';
 import { PokeAPIPokemonDTO } from './dto/pokemon.dto';
@@ -178,6 +179,26 @@ export class PokeAPIService {
         error,
         `A cadeia de evolução "${id}" não foi encontrada`,
         'Erro ao buscar cadeia de evolução da PokeAPI',
+      );
+    }
+  }
+
+  async getPokemonColorByNameOrId(
+    nameOrId: string,
+  ): Promise<PokeAPIPokemonColorDTO> {
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get<PokeAPIPokemonColorDTO>(
+          `${this.baseUrl}/pokemon-color/${nameOrId.toLowerCase()}`,
+        ),
+      );
+
+      return response.data;
+    } catch (error: unknown) {
+      PokeAPIErrorHandler.handle(
+        error,
+        `A cor do Pokémon "${nameOrId}" não foi encontrada`,
+        'Erro ao buscar dados da cor do Pokémon da PokeAPI',
       );
     }
   }
