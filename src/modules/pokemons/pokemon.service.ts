@@ -10,6 +10,7 @@ import {
   PokemonsDTO,
 } from './dto';
 import { PokemonMapper } from './mapper/pokemon.mapper';
+import { ColorUtils } from './mapper/utils/color';
 import { EvolutionUtils } from './mapper/utils/evolution';
 import { SvgUtils } from './mapper/utils/svg';
 
@@ -83,6 +84,7 @@ export class PokemonService {
     );
 
     const svgUtils = new SvgUtils();
+    const colorUtils = new ColorUtils();
 
     const items: PokemonListItemDTO[] = await Promise.all(
       pokemonsList.results.map(async (pokemon) => {
@@ -91,6 +93,36 @@ export class PokemonService {
         const pokemonData =
           await this.pokeAPIService.getPokemonByNameOrId(nameOrId);
 
+        // Buscar cor do pokemon
+        let color: PokeAPIPokemonColorDTO | undefined;
+        try {
+          const species = await this.pokeAPIService.getPokemonSpeciesByNameOrId(
+            pokemonData.species.url.split('/').filter(Boolean).pop() ?? '',
+          );
+
+          if (species.color?.url) {
+            const colorIdOrName = species.color.url
+              .split('/')
+              .filter(Boolean)
+              .pop();
+
+            if (colorIdOrName) {
+              try {
+                color =
+                  await this.pokeAPIService.getPokemonColorByNameOrId(
+                    colorIdOrName,
+                  );
+              } catch {
+                // Se não conseguir buscar cor, continua sem ela
+                color = undefined;
+              }
+            }
+          }
+        } catch {
+          // Se não conseguir buscar espécie/cor, continua sem ela
+          color = undefined;
+        }
+
         return {
           id: pokemonData.id,
           name: pokemonData.name,
@@ -98,6 +130,7 @@ export class PokemonService {
             pokemonData.sprites,
             pokemonData.id,
           ),
+          color: colorUtils.mapColor(color),
         };
       }),
     );

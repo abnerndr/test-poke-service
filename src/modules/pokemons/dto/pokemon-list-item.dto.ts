@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { PokemonColorDTO } from './pokemon-color.dto';
 import { PokemonPictureDTO } from './pokemon-picture.dto';
 
 export class PokemonListItemDTO {
@@ -13,4 +14,11 @@ export class PokemonListItemDTO {
     type: [PokemonPictureDTO],
   })
   pictures: PokemonPictureDTO[];
+
+  @ApiProperty({
+    description: 'The color of this Pokémon',
+    type: PokemonColorDTO,
+    required: false,
+  })
+  color?: PokemonColorDTO;
 }

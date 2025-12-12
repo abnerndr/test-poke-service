@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { PokeAPIPokemonDTO } from 'src/external/pokeapi/dto';
 import { PokeAPIPokemonColorDTO } from 'src/external/pokeapi/dto/pokemon-color.dto';
 import { PokemonEvolutionsDTO } from '../dto/pokemon-evolution.dto';
