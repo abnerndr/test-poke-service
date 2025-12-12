@@ -36,4 +36,13 @@ export class GetPokemonsQueryDTO {
   @IsInt()
   @Min(0)
   offset?: number;
+
+  @ApiProperty({
+    description: 'Filter Pokémon by name (partial match)',
+    example: 'pikachu',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  name?: string;
 }

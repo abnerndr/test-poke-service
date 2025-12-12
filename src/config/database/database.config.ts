@@ -1,18 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Global, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CONFIG } from 'src/shared/constants/env';
+import { CONFIG, ENV_CONFIG } from 'src/shared/constants/env';
+import { entities } from 'src/shared/entities';
 
 @Global()
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: CONFIG.DATABASE_URL,
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      synchronize: true,
-      logging: ['error'],
-      ssl: false,
+    TypeOrmModule.forRootAsync({
+      useFactory: () => ({
+        type: 'postgres',
+        url: CONFIG.DATABASE_URL,
+        entities: entities,
+        logging: ['error'],
+        synchronize: ENV_CONFIG.IS_DEVELOPMENT,
+        ssl: ENV_CONFIG.IS_PRODUCTION ? { rejectUnauthorized: false } : false,
+      }),
     }),
+    TypeOrmModule.forFeature(entities),
   ],
   exports: [TypeOrmModule],
 })

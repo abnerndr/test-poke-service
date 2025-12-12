@@ -22,11 +22,34 @@ export class SvgUtils {
   ): PokemonPictureDTO[] {
     const pictures: PokemonPictureDTO[] = [];
 
+    // Sempre incluir SVG do dream-world
     const svgUrl = this.getSvgUrl(pokemonId);
     pictures.push({ url: svgUrl });
 
+    // Buscar imagem da geração antiga (Red/Blue)
+    const oldGenSprite =
+      (sprites as any).versions?.['generation-i']?.['red-blue']
+        ?.front_default ||
+      (sprites as any).versions?.['generation-i']?.['red-blue']
+        ?.front_gray;
+
+    // Buscar imagem da geração nova (official-artwork ou front_default)
+    const newGenSprite =
+      (sprites as any).other?.['official-artwork']?.front_default ||
+      sprites.front_default;
+
+    // Adicionar imagem da geração antiga se disponível
+    if (oldGenSprite && !pictures.find((p) => p.url === oldGenSprite)) {
+      pictures.push({ url: oldGenSprite });
+    }
+
+    // Adicionar imagem da geração nova se disponível
+    if (newGenSprite && !pictures.find((p) => p.url === newGenSprite)) {
+      pictures.push({ url: newGenSprite });
+    }
+
+    // Se ainda não tiver 3 imagens, adicionar outras disponíveis
     const priorityOrder = [
-      sprites.front_default,
       sprites.front_shiny,
       sprites.front_female,
       sprites.back_default,
@@ -45,6 +68,6 @@ export class SvgUtils {
       }
     }
 
-    return pictures;
+    return pictures.slice(0, 3);
   }
 }

@@ -8,7 +8,7 @@ import {
 } from './dto/get-pokemon-query.dto';
 import { PokemonService } from './pokemon.service';
 
-@ApiTags('Pokemon ')
+@ApiTags('Pokemon')
 @Controller('pokemon')
 export class PokemonController {
   constructor(private readonly pokemonService: PokemonService) {}
@@ -31,7 +31,7 @@ export class PokemonController {
     return this.pokemonService.getPokemon(query);
   }
 
-  @Get()
+  @Get('')
   @ApiResponse({
     status: 200,
     description: 'Lista de Pokémon encontrada com sucesso',

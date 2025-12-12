@@ -4,6 +4,7 @@ import {
   PokeAPIPokemonStatDTO,
 } from 'src/external/pokeapi/dto';
 import { PokemonAbilityDTO } from './pokemon-ability.dto';
+import { PokemonEvolutionsDTO } from './pokemon-evolution.dto';
 import { PokemonPictureDTO } from './pokemon-picture.dto';
 
 export class PokemonDTO {
@@ -63,4 +64,11 @@ export class PokemonDTO {
     type: [PokemonAbilityDTO],
   })
   abilities: PokemonAbilityDTO[];
+
+  @ApiProperty({
+    description: 'The evolution chain of this Pokémon (up to 3 stages)',
+    type: PokemonEvolutionsDTO,
+    required: false,
+  })
+  evolutions?: PokemonEvolutionsDTO;
 }

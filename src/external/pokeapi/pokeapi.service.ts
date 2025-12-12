@@ -3,7 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { CONFIG } from 'src/shared/constants/env';
 import { PokeAPIAbilityDTO } from './dto/ability.dto';
+import { PokeAPIEvolutionChainDTO } from './dto/evolution-chain.dto';
 import { PokeAPIPokemonListDTO } from './dto/pokemon-list.dto';
+import { PokeAPIPokemonSpeciesDTO } from './dto/pokemon-species.dto';
 import { PokeAPIPokemonDTO } from './dto/pokemon.dto';
 import { PokeAPIErrorHandler } from './utils/error-handler';
 
@@ -79,8 +81,50 @@ export class PokeAPIService {
   async listPokemons(
     limit: number = 20,
     offset: number = 0,
+    name?: string,
   ): Promise<PokeAPIPokemonListDTO> {
     try {
+      // Se um nome foi fornecido, buscar diretamente o Pokémon
+      if (name) {
+        try {
+          const response = await firstValueFrom(
+            this.httpService.get<PokeAPIPokemonDTO>(
+              `${this.baseUrl}/pokemon/${name.toLowerCase()}`,
+            ),
+          );
+
+          const pokemon = response.data;
+          return {
+            count: 1,
+            results: [
+              {
+                name: pokemon.name,
+                url: `${this.baseUrl}/pokemon/${pokemon.id}/`,
+              },
+            ],
+          };
+        } catch (error: unknown) {
+          // Se não encontrar (404), retornar lista vazia
+          if (
+            error &&
+            typeof error === 'object' &&
+            'response' in error &&
+            error.response &&
+            typeof error.response === 'object' &&
+            'status' in error.response &&
+            error.response.status === 404
+          ) {
+            return {
+              count: 0,
+              results: [],
+            };
+          }
+          // Para outros erros, lançar exceção
+          throw error;
+        }
+      }
+
+      // Listagem normal sem filtro de nome
       const response = await firstValueFrom(
         this.httpService.get<PokeAPIPokemonListDTO>(`${this.baseUrl}/pokemon`, {
           params: {
@@ -96,6 +140,44 @@ export class PokeAPIService {
         error,
         'Lista de Pokémon não encontrada',
         'Erro ao buscar lista de Pokémon da PokeAPI',
+      );
+    }
+  }
+
+  async getPokemonSpeciesByNameOrId(
+    nameOrId: string,
+  ): Promise<PokeAPIPokemonSpeciesDTO> {
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get<PokeAPIPokemonSpeciesDTO>(
+          `${this.baseUrl}/pokemon-species/${nameOrId.toLowerCase()}`,
+        ),
+      );
+
+      return response.data;
+    } catch (error: unknown) {
+      PokeAPIErrorHandler.handle(
+        error,
+        `A espécie do Pokémon "${nameOrId}" não foi encontrada`,
+        'Erro ao buscar dados da espécie do Pokémon da PokeAPI',
+      );
+    }
+  }
+
+  async getEvolutionChainById(id: number): Promise<PokeAPIEvolutionChainDTO> {
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get<PokeAPIEvolutionChainDTO>(
+          `${this.baseUrl}/evolution-chain/${id}`,
+        ),
+      );
+
+      return response.data;
+    } catch (error: unknown) {
+      PokeAPIErrorHandler.handle(
+        error,
+        `A cadeia de evolução "${id}" não foi encontrada`,
+        'Erro ao buscar cadeia de evolução da PokeAPI',
       );
     }
   }

@@ -18,13 +18,45 @@ export class PokemonService {
     const pokemon = await this.pokeAPIService.getPokemonByNameOrId(
       query.name_or_id,
     );
-    return PokemonMapper.toDTO(pokemon);
+
+    // Buscar cadeia de evolução
+    let evolutions;
+    try {
+      const species = await this.pokeAPIService.getPokemonSpeciesByNameOrId(
+        pokemon.species.url.split('/').filter(Boolean).pop() ?? '',
+      );
+
+      if (species.evolution_chain?.url) {
+        const evolutionChainId = species.evolution_chain.url
+          .split('/')
+          .filter(Boolean)
+          .pop();
+
+        if (evolutionChainId) {
+          const evolutionChain =
+            await this.pokeAPIService.getEvolutionChainById(
+              Number(evolutionChainId),
+            );
+
+          evolutions = await PokemonMapper.mapEvolutions(
+            evolutionChain,
+            this.pokeAPIService,
+          );
+        }
+      }
+    } catch {
+      // Se não conseguir buscar evoluções, continua sem elas
+      evolutions = undefined;
+    }
+
+    return PokemonMapper.toDTO(pokemon, evolutions);
   }
 
   async listPokemons(query: GetPokemonsQueryDTO): Promise<PokemonsDTO> {
     const pokemonsList = await this.pokeAPIService.listPokemons(
       query.limit,
       query.offset,
+      query.name,
     );
 
     const svgUtils = new SvgUtils();

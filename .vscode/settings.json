@@ -1,3 +1,13 @@
 {
-  "cSpell.words": ["pokeapi", "POKEAPI", "pokemon", "pokemons", "Pokemons"]
+  "cSpell.words": [
+    "gemini",
+    "pokeapi",
+    "POKEAPI",
+    "pokemon",
+    "pokemons",
+    "Pokemons",
+    "postgres",
+    "timestamptz",
+    "uuidv"
+  ]
 }
