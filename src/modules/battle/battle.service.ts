@@ -64,6 +64,8 @@ export class BattleService {
       winnerId: battleResult.winnerId,
       metadata: {
         reason: battleResult.reason,
+        percentage: battleResult.percentage ?? 0,
+        percentageLoser: battleResult.percentageLoser ?? 0,
         firstPokemonName: firstPokemon.name,
         secondPokemonName: secondPokemon.name,
       },

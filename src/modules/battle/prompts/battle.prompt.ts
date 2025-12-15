@@ -3,6 +3,8 @@ import { PokeAPIPokemonDTO } from 'src/external/pokeapi/dto/pokemon.dto';
 export interface BattleResult {
   winnerId: number;
   reason: string;
+  percentage: number;
+  percentageLoser: number;
 }
 
 export class BattlePrompt {
@@ -53,7 +55,9 @@ export class BattlePrompt {
 
     Retorne APENAS um JSON válido com:
     - winnerId: o ID numérico do Pokémon vencedor (${pokemon1.id} ou ${pokemon2.id})
-    - reason: uma explicação curta e clara (2-3 frases) do porquê esse Pokémon venceu`;
+    - reason: uma explicação curta e clara (2-3 frases) do porquê esse Pokémon venceu em português brasileiro
+    - percentage: o percentual de vitória do Pokémon vencedor (0-100)
+    - percentageLoser: o percentual de vitória do Pokémon perdedor (0-100)`;
   }
 
   static getSchemaHint(): string {
