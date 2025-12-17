@@ -1,8 +1,10 @@
 import { PokeAPIPokemonDTO } from 'src/external/pokeapi/dto';
-import { PokemonAbilityDTO } from '../../dto';
+import { PokemonAbilityDTO } from '../dto';
 
 export class AbilitiesUtils {
-  mapAbilities(abilities: PokeAPIPokemonDTO['abilities']): PokemonAbilityDTO[] {
+  static mapAbilities(
+    abilities: PokeAPIPokemonDTO['abilities'],
+  ): PokemonAbilityDTO[] {
     if (!abilities || abilities.length === 0) {
       return [];
     }

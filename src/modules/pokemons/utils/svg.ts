@@ -1,24 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { PokeAPIPokemonDTO } from 'src/external/pokeapi/dto';
-import { PokemonPictureDTO } from '../../dto';
+import { PokemonPictureDTO } from '../dto';
 
 export class SvgUtils {
-  private readonly svgUrl: string;
+  private static readonly svgUrl: string = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world`;
 
-  constructor() {
-    this.svgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world`;
+  static getSvgUrl(pokemonId: number): string {
+    return `${SvgUtils.svgUrl}/${pokemonId}.svg`;
   }
 
-  public getSvgUrl(pokemonId: number): string {
-    return `${this.svgUrl}/${pokemonId}.svg`;
-  }
-
-  public isSvg(url: string): boolean {
+  static isSvg(url: string): boolean {
     return url.toLowerCase().endsWith('.svg');
   }
 
-  public getBestPictures(
+  static getBestPictures(
     sprites: PokeAPIPokemonDTO['sprites'],
     pokemonId: number,
   ): PokemonPictureDTO[] {

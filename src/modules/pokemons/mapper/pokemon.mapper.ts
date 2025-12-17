@@ -2,9 +2,9 @@ import { PokeAPIPokemonDTO } from 'src/external/pokeapi/dto';
 import { PokeAPIPokemonColorDTO } from 'src/external/pokeapi/dto/pokemon-color.dto';
 import { PokemonEvolutionsDTO } from '../dto/pokemon-evolution.dto';
 import { PokemonDTO } from '../dto/pokemon.dto';
-import { AbilitiesUtils } from './utils/abilities';
-import { ColorUtils } from './utils/color';
-import { SvgUtils } from './utils/svg';
+import { AbilitiesUtils } from '../utils/abilities';
+import { ColorUtils } from '../utils/color';
+import { SvgUtils } from '../utils/svg';
 
 export class PokemonMapper {
   static toDTO(
@@ -12,13 +12,9 @@ export class PokemonMapper {
     evolutions?: PokemonEvolutionsDTO,
     color?: PokeAPIPokemonColorDTO,
   ): PokemonDTO {
-    const svgUtils = new SvgUtils();
-    const abilitiesUtils = new AbilitiesUtils();
-    const colorUtils = new ColorUtils();
-
-    const bestPictures = svgUtils.getBestPictures(pokemon.sprites, pokemon.id);
-    const abilities = abilitiesUtils.mapAbilities(pokemon.abilities);
-    const mappedColor = colorUtils.mapColor(color);
+    const bestPictures = SvgUtils.getBestPictures(pokemon.sprites, pokemon.id);
+    const abilities = AbilitiesUtils.mapAbilities(pokemon.abilities);
+    const mappedColor = ColorUtils.mapColor(color);
     return {
       id: pokemon.id,
       name: pokemon.name,

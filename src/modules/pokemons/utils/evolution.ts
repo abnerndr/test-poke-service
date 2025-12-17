@@ -6,11 +6,11 @@ import {
   PokeAPIPokemonDTO,
   PokeAPIPokemonSpeciesDTO,
 } from 'src/external/pokeapi/dto';
-import { PokemonEvolutionDTO, PokemonEvolutionsDTO } from '../../dto';
+import { PokemonEvolutionDTO, PokemonEvolutionsDTO } from '../dto';
 import { SvgUtils } from './svg';
 
 export class EvolutionUtils {
-  private extractEvolutionSpecies(
+  private static extractEvolutionSpecies(
     chain: PokeAPIEvolutionChainDTO['chain'],
   ): string[] {
     const species: string[] = [];
@@ -53,7 +53,7 @@ export class EvolutionUtils {
     return species;
   }
 
-  async mapEvolutions(
+  static async mapEvolutions(
     evolutionChain: PokeAPIEvolutionChainDTO,
     pokeAPIService: {
       getPokemonSpeciesByNameOrId: (
@@ -71,7 +71,6 @@ export class EvolutionUtils {
       return undefined;
     }
 
-    const svgUtils = new SvgUtils();
     const evolutions: PokemonEvolutionsDTO = {};
 
     try {
@@ -96,7 +95,7 @@ export class EvolutionUtils {
         }
 
         const pokemon = await pokeAPIService.getPokemonByNameOrId(pokemonId);
-        const pictures = svgUtils.getBestPictures(pokemon.sprites, pokemon.id);
+        const pictures = SvgUtils.getBestPictures(pokemon.sprites, pokemon.id);
 
         return {
           id: pokemon.id,

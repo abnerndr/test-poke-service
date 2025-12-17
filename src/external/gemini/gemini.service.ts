@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment */
 import { GoogleGenAI, type GenerateContentResponse } from '@google/genai';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { CONFIG } from 'src/shared/constants/env';
@@ -6,15 +5,7 @@ import {
   GenerateJsonRequestDTO,
   GenerateTextRequestDTO,
 } from './dto/generate.dto';
-
-type GeminiClient = {
-  models: {
-    generateContent: (request: {
-      model: string;
-      contents: Array<{ role: string; parts: Array<{ text: string }> }>;
-    }) => Promise<GenerateContentResponse>;
-  };
-};
+import { GeminiClient } from './types/gemini';
 
 @Injectable()
 export class GeminiService {
