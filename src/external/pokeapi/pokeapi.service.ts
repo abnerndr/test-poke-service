@@ -85,7 +85,6 @@ export class PokeAPIService {
     name?: string,
   ): Promise<PokeAPIPokemonListDTO> {
     try {
-      // Se um nome foi fornecido, buscar diretamente o Pokémon
       if (name) {
         try {
           const response = await firstValueFrom(
@@ -105,7 +104,6 @@ export class PokeAPIService {
             ],
           };
         } catch (error: unknown) {
-          // Se não encontrar (404), retornar lista vazia
           if (
             error &&
             typeof error === 'object' &&
@@ -120,12 +118,10 @@ export class PokeAPIService {
               results: [],
             };
           }
-          // Para outros erros, lançar exceção
           throw error;
         }
       }
 
-      // Listagem normal sem filtro de nome
       const response = await firstValueFrom(
         this.httpService.get<PokeAPIPokemonListDTO>(`${this.baseUrl}/pokemon`, {
           params: {

@@ -23,9 +23,27 @@ export class BattleService {
     private readonly pokeAPIService: PokeAPIService,
   ) {}
 
+  private async validateIfBattleAlreadyExists(
+    firstPokemonId: number,
+    secondPokemonId: number,
+  ): Promise<boolean> {
+    const battle = await this.battleRepository.findOne({
+      where: { firstPokemonId, secondPokemonId },
+    });
+    return !!battle;
+  }
+
   async createBattle(
     createBattleDTO: CreateBattleDTO,
   ): Promise<BattleResponseDTO> {
+    const isBattleAlreadyExists = await this.validateIfBattleAlreadyExists(
+      createBattleDTO.firstPokemonId,
+      createBattleDTO.secondPokemonId,
+    );
+    if (isBattleAlreadyExists) {
+      throw new BadRequestException('Batalha já existe');
+    }
+
     const firstPokemon = await this.pokeAPIService.getPokemonByNameOrId(
       createBattleDTO.firstPokemonId.toString(),
     );

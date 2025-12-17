@@ -10,7 +10,7 @@ export class PokemonAbilityDTO {
   @ApiProperty({
     description: 'The slot this ability occupies in this Pokémon species',
   })
-  slot: number;
+  slot?: number;
 
   @ApiProperty({
     description: 'The effect of this ability in English',
