@@ -1,13 +1,18 @@
+# syntax=docker/dockerfile:1.7
 # Stage 1: Build
 FROM node:22-alpine AS builder
 
 RUN corepack enable
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm config set store-dir /pnpm/store
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm install --frozen-lockfile
 
 COPY . .
 
@@ -21,6 +26,8 @@ RUN pnpm prune --prod
 FROM node:22-alpine AS production
 
 RUN corepack enable
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
 
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nestjs -u 1001
