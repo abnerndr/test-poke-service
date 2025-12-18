@@ -8,6 +8,8 @@ export const CONFIG: EnvironmentVariables = {
   POKEAPI_BASE_URL: process.env.POKEAPI_BASE_URL ?? '',
   GEMINI_API_KEY: process.env.GEMINI_API_KEY ?? '',
   GEMINI_MODEL: process.env.GEMINI_MODEL ?? 'gemini-2.5-flash',
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? '',
+  OPENAI_MODEL: process.env.OPENAI_MODEL ?? 'gpt-4o',
   FRONTEND_URL: process.env.FRONTEND_URL ?? 'http://localhost:3000',
 };
 

@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BattleService } from './battle.service';
 import { CreateBattleDTO } from './dto/create.dto';
+import { FindBattleQueryDTO } from './dto/find-query.dto';
 import { BattleResponseDTO } from './dto/response.dto';
 
 @ApiTags('Battle')
@@ -48,8 +49,10 @@ export class BattleController {
     status: 500,
     description: 'Erro ao buscar lista de batalhas',
   })
-  async findAllBattles(): Promise<BattleResponseDTO[]> {
-    return this.battleService.findAllBattles();
+  async findAllBattles(
+    @Query() query: FindBattleQueryDTO,
+  ): Promise<BattleResponseDTO[]> {
+    return this.battleService.findAllBattlesPaginated(query);
   }
 
   @Get(':id')

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBattleDTO } from './dto/create.dto';
+import { FindBattleQueryDTO } from './dto/find-query.dto';
 import { BattleResponseDTO } from './dto/response.dto';
 import { CreateBattleService } from './services/create.service';
 import { FindBattleService } from './services/find.service';
@@ -18,7 +19,13 @@ export class BattleService {
   }
 
   async findAllBattles(): Promise<BattleResponseDTO[]> {
-    return await this.findBattleService.findAllBattles();
+    return await this.findBattleService.findAllBattles({});
+  }
+
+  async findAllBattlesPaginated(
+    query: FindBattleQueryDTO,
+  ): Promise<BattleResponseDTO[]> {
+    return await this.findBattleService.findAllBattles(query);
   }
 
   async findBattleById(id: string): Promise<BattleResponseDTO> {
