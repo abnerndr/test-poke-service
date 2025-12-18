@@ -1,7 +1,9 @@
 import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GeminiService } from 'src/external/gemini/gemini.service';
+import { OpenAIService } from 'src/external/openai/openai.service';
 import { PokeAPIService } from 'src/external/pokeapi/pokeapi.service';
+import { CONFIG } from 'src/shared/constants/env';
 import { Battle } from 'src/shared/entities/battles.entity';
 import { Repository } from 'typeorm';
 import { CreateBattleDTO } from '../dto/create.dto';
@@ -15,6 +17,7 @@ export class CreateBattleService {
     @InjectRepository(Battle)
     private readonly battleRepository: Repository<Battle>,
     private readonly geminiService: GeminiService,
+    private readonly openAIService: OpenAIService,
     private readonly pokeAPIService: PokeAPIService,
   ) {}
 
@@ -30,10 +33,14 @@ export class CreateBattleService {
 
   private async AISimulateBattle(prompt: string): Promise<BattleResult> {
     try {
-      const battleResult = await this.geminiService.generateJson<BattleResult>({
+      const battleResult = await this.openAIService.generate<BattleResult>({
         prompt,
-        schemaHint: BattlePrompt.getSchemaHint(),
+        model: CONFIG.OPENAI_MODEL,
       });
+      // const battleResult = await this.geminiService.generateJson<BattleResult>({
+      //   prompt,
+      //   schemaHint: BattlePrompt.getSchemaHint(),
+      // });
       return battleResult;
     } catch (error) {
       if (error instanceof HttpException) {
